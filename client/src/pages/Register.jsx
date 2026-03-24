@@ -10,9 +10,8 @@ function Register() {
   const { login } = useAuth()
   const navigate = useNavigate()
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value })
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -31,75 +30,125 @@ function Register() {
   }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>ClearClause</h1>
-        <h2 style={styles.subtitle}>Create your account</h2>
+    <div className="auth-container">
+      <div className="auth-card">
+        <div style={{ marginBottom: '2rem' }}>
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              background: 'var(--accent)',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '1rem',
+              fontSize: '16px',
+              fontWeight: '700',
+              color: '#fff',
+            }}
+          >
+            CC
+          </div>
 
-        {error && <p style={styles.error}>{error}</p>}
+          <h1
+            style={{
+              fontSize: '1.4rem',
+              fontWeight: '600',
+              marginBottom: '0.2rem',
+            }}
+          >
+            Create account
+          </h1>
 
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <div style={styles.field}>
-            <label style={styles.label}>Full name</label>
+          <p
+            style={{
+              color: 'var(--text-secondary)',
+              fontSize: '0.9rem',
+            }}
+          >
+            Join ClearClause today
+          </p>
+        </div>
+
+        {error && <div className="auth-error">{error}</div>}
+
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+            <label style={{ fontSize: '0.85rem', fontWeight: '500' }}>
+              Full name
+            </label>
             <input
+              className="auth-input"
               name="name"
               type="text"
               value={form.name}
               onChange={handleChange}
-              style={styles.input}
               placeholder="Arjun Shah"
               required
             />
           </div>
-          <div style={styles.field}>
-            <label style={styles.label}>Email</label>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+            <label style={{ fontSize: '0.85rem', fontWeight: '500' }}>
+              Email
+            </label>
             <input
+              className="auth-input"
               name="email"
               type="email"
               value={form.email}
               onChange={handleChange}
-              style={styles.input}
               placeholder="arjun@example.com"
               required
             />
           </div>
-          <div style={styles.field}>
-            <label style={styles.label}>Password</label>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+            <label style={{ fontSize: '0.85rem', fontWeight: '500' }}>
+              Password
+            </label>
             <input
+              className="auth-input"
               name="password"
               type="password"
               value={form.password}
               onChange={handleChange}
-              style={styles.input}
               placeholder="At least 6 characters"
               required
             />
           </div>
-          <button type="submit" style={styles.button} disabled={loading}>
+
+          <button
+            className="auth-btn"
+            type="submit"
+            disabled={loading}
+            style={{ marginTop: '0.5rem' }}
+          >
             {loading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
 
-        <p style={styles.switchText}>
+        <p
+          style={{
+            textAlign: 'center',
+            marginTop: '1.5rem',
+            fontSize: '0.875rem',
+            color: 'var(--text-secondary)',
+          }}
+        >
           Already have an account? <Link to="/login">Sign in</Link>
         </p>
       </div>
     </div>
   )
-}
-
-const styles = {
-  container: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' },
-  card: { background: '#fff', padding: '2rem', borderRadius: '12px', border: '1px solid #e5e5e5', width: '100%', maxWidth: '400px' },
-  title: { fontSize: '1.5rem', fontWeight: '600', marginBottom: '0.25rem' },
-  subtitle: { fontSize: '1rem', fontWeight: '400', color: '#666', marginBottom: '1.5rem' },
-  error: { background: '#fff0f0', color: '#cc0000', padding: '0.75rem', borderRadius: '8px', fontSize: '0.875rem', marginBottom: '1rem' },
-  form: { display: 'flex', flexDirection: 'column', gap: '1rem' },
-  field: { display: 'flex', flexDirection: 'column', gap: '0.375rem' },
-  label: { fontSize: '0.875rem', fontWeight: '500', color: '#333' },
-  input: { padding: '0.625rem 0.75rem', borderRadius: '8px', border: '1px solid #ddd', fontSize: '0.95rem', outline: 'none' },
-  button: { padding: '0.75rem', borderRadius: '8px', background: '#1a1a1a', color: '#fff', border: 'none', fontSize: '0.95rem', fontWeight: '500', cursor: 'pointer', marginTop: '0.5rem' },
-  switchText: { textAlign: 'center', marginTop: '1.25rem', fontSize: '0.875rem', color: '#666' },
 }
 
 export default Register
