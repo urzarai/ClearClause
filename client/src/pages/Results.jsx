@@ -1,8 +1,9 @@
- import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import api from '../api/axios'
 import SafetyGauge from '../components/SafetyGauge'
 import ClauseCard from '../components/ClauseCard'
+import { generateReport } from '../utils/generateReport'
 
 const POLL_INTERVAL = 4000
 
@@ -31,11 +32,11 @@ function ProcessingScreen({ fileName }) {
         alignItems: 'center', justifyContent: 'center',
       }}>
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
-          <line x1="16" y1="13" x2="8" y2="13"/>
-          <line x1="16" y1="17" x2="8" y2="17"/>
-          <polyline points="10 9 9 9 8 9"/>
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+          <polyline points="10 9 9 9 8 9" />
         </svg>
       </div>
 
@@ -67,9 +68,9 @@ function ScoreBreakdown({ clauses }) {
   }, {})
 
   const items = [
-    { label: 'High Risk',   count: counts.High || 0,   color: 'var(--danger)',  bg: 'var(--danger-subtle)' },
+    { label: 'High Risk', count: counts.High || 0, color: 'var(--danger)', bg: 'var(--danger-subtle)' },
     { label: 'Medium Risk', count: counts.Medium || 0, color: 'var(--warning)', bg: 'var(--warning-subtle)' },
-    { label: 'Low Risk',    count: counts.Low || 0,    color: 'var(--success)', bg: 'var(--success-subtle)' },
+    { label: 'Low Risk', count: counts.Low || 0, color: 'var(--success)', bg: 'var(--success-subtle)' },
   ]
 
   return (
@@ -227,9 +228,9 @@ function Results() {
     )
   }
 
-  const highCount   = doc.clauses.filter(c => c.riskLevel === 'High').length
+  const highCount = doc.clauses.filter(c => c.riskLevel === 'High').length
   const mediumCount = doc.clauses.filter(c => c.riskLevel === 'Medium').length
-  const lowCount    = doc.clauses.filter(c => c.riskLevel === 'Low').length
+  const lowCount = doc.clauses.filter(c => c.riskLevel === 'Low').length
 
   return (
     <div style={{ maxWidth: '960px' }}>
@@ -238,7 +239,7 @@ function Results() {
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '2rem', gap: '1rem', flexWrap: 'wrap' }}>
         <div>
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/dashboard')}
             style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.85rem', cursor: 'pointer', marginBottom: '0.5rem', padding: 0 }}
           >
             ← Dashboard
@@ -250,6 +251,32 @@ function Results() {
             {doc.clauses.length} clauses analysed · {new Date(doc.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
           </p>
         </div>
+
+        <button
+          onClick={() => generateReport(doc)}
+          style={{
+            display: 'flex', alignItems: 'center', gap: '8px',
+            padding: '10px 18px',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-strong)',
+            borderRadius: 'var(--radius-md)',
+            color: 'var(--text-primary)',
+            fontSize: '0.875rem',
+            fontWeight: '500',
+            cursor: 'pointer',
+            transition: 'box-shadow 0.15s, border-color 0.15s',
+            whiteSpace: 'nowrap',
+          }}
+          onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)' }}
+          onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--border-strong)'; e.currentTarget.style.boxShadow = 'none' }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Download Report
+        </button>
       </div>
 
       {/* Top grid: score + summary */}
@@ -324,9 +351,9 @@ function Results() {
             const isActive = filter === f
             const activeClass = isActive
               ? f === 'All' ? 'active'
-              : f === 'High' ? 'active-high'
-              : f === 'Medium' ? 'active-medium'
-              : 'active-low'
+                : f === 'High' ? 'active-high'
+                  : f === 'Medium' ? 'active-medium'
+                    : 'active-low'
               : ''
             return (
               <button
@@ -366,9 +393,9 @@ function ExpandableClauseCard({ clause, index, forceOpen }) {
   const open = forceOpen || localOpen
 
   const risk = {
-    High:   { color: 'var(--danger)',  bg: 'var(--danger-subtle)',  label: 'High Risk' },
+    High: { color: 'var(--danger)', bg: 'var(--danger-subtle)', label: 'High Risk' },
     Medium: { color: 'var(--warning)', bg: 'var(--warning-subtle)', label: 'Medium Risk' },
-    Low:    { color: 'var(--success)', bg: 'var(--success-subtle)', label: 'Low Risk' },
+    Low: { color: 'var(--success)', bg: 'var(--success-subtle)', label: 'Low Risk' },
   }[clause.riskLevel] || { color: 'var(--text-muted)', bg: 'var(--bg-tertiary)', label: 'Unknown' }
 
   const sectionLabel = clause.section?.length > 45
@@ -412,7 +439,7 @@ function ExpandableClauseCard({ clause, index, forceOpen }) {
           stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
           style={{ transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : 'rotate(0deg)', flexShrink: 0 }}
         >
-          <polyline points="6 9 12 15 18 9"/>
+          <polyline points="6 9 12 15 18 9" />
         </svg>
       </div>
 
