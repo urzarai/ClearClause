@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
 const clauseSchema = new mongoose.Schema({
-  originalText: String,
-  plainEnglish: String,
-  riskLevel: { type: String, enum: ['Low', 'Medium', 'High'] },
+  originalText: { type: String, required: true },
+  section: { type: String, default: 'General' },
+  plainEnglish: { type: String, default: '' },
+  riskLevel: { type: String, enum: ['Low', 'Medium', 'High'], default: null },
 }, { _id: false });
 
 const documentSchema = new mongoose.Schema(
@@ -14,10 +15,20 @@ const documentSchema = new mongoose.Schema(
     safetyScore: { type: Number, default: null },
     summary: { type: String, default: '' },
     clauses: [clauseSchema],
-    namedEntities: { type: Object, default: {} },
+    namedEntities: {
+      parties: [String],
+      dates: [String],
+      amounts: [String],
+      jurisdictions: [String],
+    },
     flaggedKeywords: [String],
+    topTerms: [{ term: String, score: Number }],
     extractedText: { type: String, default: '' },
-    status: { type: String, enum: ['processing', 'complete', 'error'], default: 'processing' },
+    status: {
+      type: String,
+      enum: ['processing', 'complete', 'error'],
+      default: 'processing',
+    },
   },
   { timestamps: true }
 );
