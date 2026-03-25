@@ -1,8 +1,8 @@
 const fs = require('fs');
-const path = require('path');
 const Document = require('../models/Document');
 const User = require('../models/User');
 const { processNLP } = require('../services/nlp');
+const { analyseDocument } = require('../services/groq');
 
 const extractText = async (filePath, mimeType) => {
   if (mimeType === 'application/pdf') {
@@ -23,10 +23,8 @@ const extractText = async (filePath, mimeType) => {
         .join(' ');
       fullText += pageText + '\n';
     }
-
     return fullText;
   }
-
   return fs.readFileSync(filePath, 'utf-8');
 };
 
@@ -37,6 +35,31 @@ const normalizeText = (text) => {
     .replace(/[ \t]+/g, ' ')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
+};
+
+const runGroqAnalysis = async (documentId, clauses, extractedText, fileName) => {
+  try {
+    const { analysedClauses, summary, safetyScore } = await analyseDocument(
+      clauses,
+      extractedText,
+      fileName
+    );
+
+    await Document.findByIdAndUpdate(documentId, {
+      clauses: analysedClauses,
+      summary,
+      safetyScore,
+      status: 'complete',
+    });
+
+    console.log(`Document ${documentId} analysis complete. Safety score: ${safetyScore}`);
+  } catch (err) {
+    console.error(`Groq analysis failed for document ${documentId}:`, err.message);
+    await Document.findByIdAndUpdate(documentId, {
+      status: 'error',
+      errorMessage: err.message,
+    });
+  }
 };
 
 const uploadDocument = async (req, res) => {
@@ -68,7 +91,6 @@ const uploadDocument = async (req, res) => {
     }
 
     const { clauses, namedEntities, flaggedKeywords, topTerms } = processNLP(extractedText);
-
     const fileType = req.file.mimetype === 'application/pdf' ? 'pdf' : 'txt';
 
     const document = await Document.create({
@@ -84,20 +106,22 @@ const uploadDocument = async (req, res) => {
     });
 
     await User.findByIdAndUpdate(req.user._id, { $inc: { documentsCount: 1 } });
-
     fs.unlinkSync(filePath);
 
     res.status(201).json({
       documentId: document._id,
       fileName: document.fileName,
       fileType: document.fileType,
+      status: 'processing',
       characterCount: extractedText.length,
       clauseCount: clauses.length,
       flaggedKeywords,
       namedEntities,
-      topTerms,
-      textPreview: extractedText.substring(0, 300),
+      message: 'Document uploaded. AI analysis is running in the background.',
     });
+
+    runGroqAnalysis(document._id, clauses, extractedText, document.fileName);
+
   } catch (error) {
     if (filePath && fs.existsSync(filePath)) fs.unlinkSync(filePath);
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -157,7 +181,6 @@ const deleteDocument = async (req, res) => {
     }
 
     await User.findByIdAndUpdate(req.user._id, { $inc: { documentsCount: -1 } });
-
     res.json({ message: 'Document deleted' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });

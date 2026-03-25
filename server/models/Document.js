@@ -5,6 +5,7 @@ const clauseSchema = new mongoose.Schema({
   section: { type: String, default: 'General' },
   plainEnglish: { type: String, default: '' },
   riskLevel: { type: String, enum: ['Low', 'Medium', 'High'], default: null },
+  riskReason: { type: String, default: '' },
 }, { _id: false });
 
 const documentSchema = new mongoose.Schema(
@@ -29,6 +30,7 @@ const documentSchema = new mongoose.Schema(
       enum: ['processing', 'complete', 'error'],
       default: 'processing',
     },
+    errorMessage: { type: String, default: '' },
   },
   { timestamps: true }
 );
