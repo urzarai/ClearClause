@@ -1,19 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import ScaleVisual from '../components/ScaleVisual'
+import ThemeToggle from '../components/ThemeToggle'
 
-const FEATURES = [
-  'CLAUSE EXTRACTION',
-  'RISK RATING',
-  'PLAIN ENGLISH',
-  'SAFETY SCORE',
-  'PDF REPORT',
-]
-
-const TICKS = Array.from({ length: 18 })
+const FEATURES = ['CLAUSE EXTRACTION','RISK RATING','SAFETY SCORE','PDF REPORT']
+const TICKS    = Array.from({length: 18})
 
 function Landing() {
-  const navigate  = useNavigate()
+  const navigate         = useNavigate()
   const { isAuthenticated } = useAuth()
 
   const handleAnalyse = () => navigate(isAuthenticated ? '/upload' : '/login')
@@ -22,37 +16,34 @@ function Landing() {
 
   return (
     <div className="landing">
-      <div className="landing-grid" />
-      <div className="landing-noise" />
+      <div className="landing-grid" aria-hidden="true"/>
+      <div className="landing-noise" aria-hidden="true"/>
 
-      {/* Ruler marks on left edge */}
-      <div className="landing-rule">
-        {TICKS.map((_, i) => <div key={i} className="landing-rule-tick" />)}
+      <div className="landing-rule" aria-hidden="true">
+        {TICKS.map((_,i) => <div key={i} className="landing-rule-tick"/>)}
       </div>
 
       {/* Nav */}
-      <nav className="landing-nav">
+      <nav className="landing-nav" aria-label="Site navigation">
         <div className="landing-nav-logo">
-          <div className="landing-nav-logo-mark">CC</div>
+          <div className="landing-nav-logo-mark" aria-hidden="true">CC</div>
           CLEARCLAUSE
         </div>
+
         <div className="landing-nav-links">
-          {!isAuthenticated ? (
+          {isAuthenticated ? (
+            <ThemeToggle variant="landing" />
+          ) : (
             <>
-              <button className="landing-nav-link" onClick={handleLogin}>SIGN IN</button>
               <button className="landing-nav-btn"  onClick={handleSignup}>GET STARTED</button>
             </>
-          ) : (
-            <button className="landing-nav-btn" onClick={() => navigate('/dashboard')}>DASHBOARD →</button>
           )}
         </div>
       </nav>
 
       {/* Body */}
-      <div className="landing-body">
+      <main className="landing-body">
         <div className="landing-left">
-          <div className="landing-eyebrow">001 — AI LEGAL ANALYSIS</div>
-
           <h1 className="landing-title">
             LEGAL<br/>
             DOCS,<br/>
@@ -66,43 +57,34 @@ function Landing() {
           </p>
 
           <div className="landing-actions">
-            <button className="landing-cta" onClick={handleAnalyse}>
+            <button
+              className="landing-cta"
+              onClick={handleAnalyse}
+              aria-label={isAuthenticated ? 'Go to document upload' : 'Sign in to analyse a document'}
+            >
               ANALYSE A DOCUMENT →
             </button>
             {!isAuthenticated && (
               <button className="landing-cta-secondary" onClick={handleLogin}>
-                SIGN IN
+                LOG IN
               </button>
             )}
           </div>
 
-          <div className="landing-features">
+          <div className="landing-features" role="list" aria-label="Features">
             {FEATURES.map(f => (
-              <div key={f} className="landing-feature">
-                <div className="landing-feature-dot" />
+              <div key={f} className="landing-feature" role="listitem">
+                <div className="landing-feature-dot" aria-hidden="true"/>
                 {f}
               </div>
             ))}
           </div>
         </div>
 
-        <div className="landing-right">
+        <div className="landing-right" aria-hidden="true">
           <ScaleVisual />
         </div>
-      </div>
-
-      {/* Status bar */}
-      <div className="landing-statusbar">
-        <span>SYSTEM.ACTIVE</span>
-        <div className="landing-statusbar-right">
-          <span>V1.0.0</span>
-          <span>CLEARCLAUSE.AI</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span>RENDERING</span>
-            <div className="status-blink" />
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
   )
 }

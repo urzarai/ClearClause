@@ -13,11 +13,40 @@ const MoonIcon = () => (
   </svg>
 )
 
-function ThemeToggle() {
+function ThemeToggle({ variant = 'default' }) {
   const { theme, toggle } = useTheme()
 
+  if (variant === 'landing') {
+    return (
+      <button
+        onClick={toggle}
+        title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+        style={{
+          width: '36px', height: '36px', borderRadius: '50%',
+          background: 'var(--landing-toggle-bg)',
+          border: '1px solid var(--landing-toggle-border)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer', transition: 'all 0.15s', flexShrink: 0,
+          color: 'var(--landing-text)',
+        }}
+        onMouseOver={e => e.currentTarget.style.transform = 'scale(1.08)'}
+        onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+        aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      >
+        <span style={{ width: '16px', height: '16px', display: 'flex' }}>
+          {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+        </span>
+      </button>
+    )
+  }
+
   return (
-    <button className="theme-toggle" onClick={toggle} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
+    <button
+      className="theme-toggle"
+      onClick={toggle}
+      title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+    >
       {theme === 'light' ? <MoonIcon /> : <SunIcon />}
     </button>
   )

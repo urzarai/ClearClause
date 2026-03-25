@@ -19,7 +19,7 @@ function Login() {
     try {
       const res = await api.post('/auth/login', form)
       login(res.data.token, res.data.user)
-      navigate('/dashboard')
+      navigate('/upload')
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed')
     } finally {

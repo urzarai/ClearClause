@@ -4,7 +4,6 @@ import { ThemeProvider } from './context/ThemeContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Layout from './components/Layout'
 import Landing from './pages/Landing'
-import Home from './pages/Home'
 import Upload from './pages/Upload'
 import Results from './pages/Results'
 import History from './pages/History'
@@ -17,13 +16,12 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/"         element={<Landing />} />
-            <Route path="/login"    element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<ProtectedRoute><Layout><Home /></Layout></ProtectedRoute>} />
-            <Route path="/upload"    element={<ProtectedRoute><Layout><Upload /></Layout></ProtectedRoute>} />
+            <Route path="/"            element={<Landing />} />
+            <Route path="/login"       element={<Login />} />
+            <Route path="/register"    element={<Register />} />
+            <Route path="/upload"      element={<ProtectedRoute><Layout><Upload /></Layout></ProtectedRoute>} />
             <Route path="/results/:id" element={<ProtectedRoute><Layout><Results /></Layout></ProtectedRoute>} />
-            <Route path="/history"   element={<ProtectedRoute><Layout><History /></Layout></ProtectedRoute>} />
+            <Route path="/history"     element={<ProtectedRoute><Layout><History /></Layout></ProtectedRoute>} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
