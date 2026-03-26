@@ -24,6 +24,7 @@ app.use((err, req, res, next) => {
   }
   res.status(400).json({ message: err.message || 'Something went wrong' });
 });
+app.options('/{*path}', cors());
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
