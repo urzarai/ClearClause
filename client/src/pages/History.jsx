@@ -110,7 +110,6 @@ function History() {
             )}
 
             {/* List */}
-      // replace the loading block:
             {loading ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {Array.from({ length: 5 }).map((_, i) => (
