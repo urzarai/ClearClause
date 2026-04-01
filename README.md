@@ -4,9 +4,7 @@
 
 **AI-powered legal document simplifier for non-lawyers**
 
-[Live Demo](https://your-vercel-url) · [Report a Bug](https://github.com/yourusername/clearclause/issues) · [Request a Feature](https://github.com/yourusername/clearclause/issues)
-
-![ClearClause Landing Page](https://your-screenshot-url)
+[Live Demo]([https://clear-clause-murex.vercel.app/)])
 
 </div>
 
