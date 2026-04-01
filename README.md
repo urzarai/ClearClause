@@ -4,7 +4,7 @@
 
 **AI-powered legal document simplifier for non-lawyers**
 
-# Live Demo:  https://clear-clause-murex.vercel.app/
+### Live Demo:  https://clear-clause-murex.vercel.app/
 
 </div>
 
