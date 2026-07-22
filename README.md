@@ -4,9 +4,7 @@
 
 **AI-powered legal document simplifier for non-lawyers**
 
-[Live Demo](https://your-vercel-url) · [Report a Bug](https://github.com/yourusername/clearclause/issues) · [Request a Feature](https://github.com/yourusername/clearclause/issues)
-
-![ClearClause Landing Page](https://your-screenshot-url)
+**Live Demo: ** https://clear-clause-murex.vercel.app/
 
 </div>
 
@@ -275,5 +273,4 @@ All endpoints are prefixed with `/api`. Protected routes require `Authorization:
 ---
 
 ## License
-
-MIT © 2025 [Urza Rai](https://github.com/urzarai)
+VIT © 2026 [Urza Rai](https://github.com/urzarai)
