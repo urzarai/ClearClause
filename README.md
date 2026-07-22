@@ -276,4 +276,4 @@ All endpoints are prefixed with `/api`. Protected routes require `Authorization:
 ## License
 =======
 
-MIT © 2025 [Urza Rai](https://github.com/urzarai)
+VIT © 2026 [Urza Rai](https://github.com/urzarai)
