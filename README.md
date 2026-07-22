@@ -4,7 +4,11 @@
 
 **AI-powered legal document simplifier for non-lawyers**
 
+<<<<<<< HEAD
 **Live Demo: ** https://clear-clause-murex.vercel.app/
+=======
+### Live Demo:  https://clear-clause-murex.vercel.app/
+>>>>>>> 4444126e1524ccfb16335e57be671ee6d12fd9da
 
 </div>
 
@@ -273,4 +277,9 @@ All endpoints are prefixed with `/api`. Protected routes require `Authorization:
 ---
 
 ## License
+<<<<<<< HEAD
 VIT © 2026 [Urza Rai](https://github.com/urzarai)
+=======
+
+MIT © 2025 [Urza Rai](https://github.com/urzarai)
+>>>>>>> 4444126e1524ccfb16335e57be671ee6d12fd9da
